@@ -23,4 +23,3 @@ sections `Administrative setup <#administrative-setup>`__ and
    architecture-functions.rst
    architecture-log.rst
 
-.. image:: static/program.svg
