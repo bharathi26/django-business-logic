@@ -15,11 +15,11 @@ sections `Administrative setup <#administrative-setup>`__ and
    :maxdepth: 2
    :caption: Detailed:
 
-   architecture-program.rst
-   architecture-node.rst
-   architecture-constant.rst
-   architecture-environment.rst
-   architecture-context.rst
-   architecture-functions.rst
-   architecture-log.rst
+   program.rst
+   node.rst
+   constant.rst
+   environment.rst
+   context.rst
+   functions.rst
+   log.rst
 

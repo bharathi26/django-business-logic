@@ -12,4 +12,4 @@ Editable functions
 Function libraries
 ------------------
 
-.. image:: static/uml/Function.svg
+.. image:: ../static/uml/Function.svg
