@@ -17,8 +17,8 @@ sections `Administrative setup <#administrative-setup>`__ and
 
    program.rst
    node.rst
-   constants.rst
-   references.rst
+   operators.rst
+   operands.rst
    environment.rst
    context.rst
    functions.rst
