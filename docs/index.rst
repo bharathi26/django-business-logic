@@ -56,11 +56,11 @@ Welcome to django-business-logic's documentation!
    motivation.rst
    screenshots.rst
    demo.rst
-   architecture/index.rst
    requirements.rst
    installation.rst
    configuration.rst
    visual-programming.rst
+   architecture/index.rst
    development.rst
    roadmap.rst
    credits.rst

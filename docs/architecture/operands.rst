@@ -8,3 +8,4 @@ Operands
 
    constants.rst
    references.rst
+   variables.rst
