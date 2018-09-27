@@ -191,13 +191,26 @@ class ProgramVersion(models.Model):
         return self.title
 
     def copy(self, new_title):
+        """
+        Creates a copy of self with given title.
+        Suitable for "save as" actions.
+        :param new_title: new title
+        :return: new ProgramVersion instance
+        """
         entry_point = self.entry_point.clone()
         new_version = ProgramVersion.objects.create(title=new_title, program=self.program, entry_point=entry_point)
         new_version.save()
         return new_version
 
-    def execute(self, **kwargs):
-        context = kwargs.pop('context', Context())
+    def execute(self, context=None, **kwargs):
+        """
+        Main function for program execution
+
+        :param context: Context instance
+        :param kwargs:
+        :return: Context instance
+        """
+        context = context if context is not None else Context()
         execution = context.execution = Execution.objects.create(program_version=self) if context.config.debug else None
 
         for program_argument in self.program.program_interface.arguments.all():
