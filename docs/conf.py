@@ -187,6 +187,8 @@ epub_exclude_files = ['search.html']
 
 autodoc_default_options = {
     'member-order': 'bysource',
-    'undoc-members': None,
+    # 'undoc-members': None,
     'exclude-members': 'DoesNotExist,MultipleObjectsReturned'
 }
+
+todo_include_todos = True

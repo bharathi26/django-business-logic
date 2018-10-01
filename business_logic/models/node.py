@@ -60,7 +60,13 @@ class Node(NS_Node):
         return super(Node, self).add_child(**kwargs)
 
     def clone(self):
+        """
+        Creates a clone of entire tree starting from self
 
+        Returns:
+            :class:`business_logic.models.Node`: root node of cloned tree
+
+        """
         class CloneVisitor(NodeVisitor):
 
             def __init__(self):
@@ -157,7 +163,11 @@ class Node(NS_Node):
         return self.object_id is not None and getattr(self.content_object, 'interpret_children', False)
 
     def pprint(self):
+        """
+        Prints entire tree starting from self to stdout.
 
+        Utility function for development purposes.
+        """
         class PrettyPrintVisitor(NodeVisitor):
 
             def __init__(self):
@@ -227,16 +237,52 @@ class NodeCacheHolder(object):
 
 
 class NodeVisitor(NodeCacheHolder):
+    """
+    Utility class for tree traversal.
 
+    Derived class should implement the :func:`business_logic.models.NodeVisitor.visit` method.
+    Traversal is made by executing :func:`business_logic.models.NodeVisitor.preorder`
+    or :func:`business_logic.models.NodeVisitor.postorder` method.
+
+    Examples:
+        * :func:`business_logic.models.Node.clone`
+        * :func:`business_logic.models.Node.pprint`
+    """
     def visit(self, node, *args, **kwargs):
+        """
+        Main method which should be realised in derived classes
+
+        Args:
+            node(:class:`business_logic.models.Node`): currently processed node
+            *args: args passed to :func:`business_logic.models.NodeVisitor.preorder`
+                or :func:`business_logic.models.NodeVisitor.postorder`
+            **kwargs: kwargs passed to :func:`business_logic.models.NodeVisitor.preorder`
+                or :func:`business_logic.models.NodeVisitor.postorder`
+        """
         raise NotImplementedError()
 
     def preorder(self, node, *args, **kwargs):
+        """
+        Tree traversal from top to bottom.
+
+        Args:
+            node(:class:`business_logic.models.Node`): node for starting tree traversal
+            *args: arbitrary args which should be passed to :func:`business_logic.models.NodeVisitor.visit`
+            **kwargs: arbitrary kwargs which should be passed to :func:`business_logic.models.NodeVisitor.visit`
+        """
         self.visit(node, *args, **kwargs)
         for child in self.get_children(node):
             self.preorder(child, *args, **kwargs)
 
     def postorder(self, node, *args, **kwargs):
+        """
+        Tree traversal from bottom to top.
+
+        Args:
+            node(:class:`business_logic.models.Node`): node for starting tree traversal
+            *args: arbitrary args which should be passed to :func:`business_logic.models.NodeVisitor.visit`
+            **kwargs: arbitrary kwargs which should be passed to :func:`business_logic.models.NodeVisitor.visit`
+        """
         for child in self.get_children(node):
             self.postorder(child, *args, **kwargs)
         self.visit(node, *args, **kwargs)

@@ -22,9 +22,22 @@ from ..fields import DeepAttributeField
 class ExecutionEnvironment(models.Model):
     """
     Environment of execution.
+
     Can be linked to any of :class:`business_logic.models.ProgramInterface` ->
     :class:`business_logic.models.Program` -> :class:`business_logic.models.ProgramVersion` chain.
 
+    Contains list of :class:`business_logic.models.FunctionLibrary`
+    and defines parameters for :class:`business_logic.models.Context` creation.
+
+
+    Attributes:
+        title(str): human-readable name
+        description(str): description
+        libraries: list of :class:`business_logic.models.FunctionLibrary` available to execution
+        debug(bool): default=False
+        log(bool): default=False
+        cache(bool): default=True
+        exception_handling_policy(:class:`business_logic.models.ExceptionHandlingPolicy`):
     """
     title = models.CharField(_('Title'), max_length=255, unique=True)
     description = models.TextField(_('Description'), null=True, blank=True)
@@ -46,6 +59,9 @@ class ExecutionEnvironment(models.Model):
 
 @python_2_unicode_compatible
 class ProgramInterface(models.Model):
+    """
+
+    """
     title = models.CharField(_('Title'), max_length=255, db_index=True)
     code = models.SlugField(_('Code'), max_length=255, null=True, blank=True, unique=True, db_index=True)
 
@@ -222,11 +238,26 @@ class ProgramVersion(models.Model):
     def execute(self, context=None, **kwargs):
         """
         Main function for program execution
+
         Args:
-            context(:class:`business_logic.models.Context`, optional):
-            kwargs:
+            context(:class:`business_logic.models.Context`, optional): Context instance
+            **kwargs: program arguments
+
         Returns:
-            (:class:`business_logic.models.Context`) instance
+            :class:`business_logic.models.Context`: Context instance
+
+        Raises:
+            KeyError: If any of program argument omitted
+
+            AssertionError: if any of program argument have incorrect type,
+                if passed unregistered program argument
+
+        Todo:
+            * create own exceptions instead AssertionError/KeyError/etc
+
+        See Also:
+            * :class:`business_logic.models.Context`
+            * :class:`business_logic.models.ExecutionEnvironment`
         """
         context = context if context is not None else Context()
         execution = context.execution = Execution.objects.create(program_version=self) if context.config.debug else None
