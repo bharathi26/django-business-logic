@@ -54,8 +54,8 @@ Welcome to django-business-logic's documentation!
    :caption: Contents:
 
    motivation.rst
-   screenshots.rst
    demo.rst
+   screenshots.rst
    requirements.rst
    installation.rst
    configuration.rst
