@@ -3,6 +3,29 @@ Demo application
 
 Description
 -----------
+Demo application is a simple bookshelf with following models:
+
+.. automodule:: sites.dev.books.models
+    :members:
+
+On each entering to single book view the following python code executed:
+
+.. code:: python
+
+    # sites/dev/books/views.py
+    class BookDetail(generic.DetailView):
+        model = Book
+
+        def get_object(self, queryset=None):
+            book = super(BookDetail, self).get_object(queryset)
+            program = Program.objects.get(code='on_book_view')
+            version = program.versions.order_by('id').last()
+            version.execute(context=Context(debug=True, log=True), book=book)
+            book.publisher.save()
+
+            return book
+
+You can see screenshots now: :ref:`demo_on_book_view_screenshot` and :ref:`demo_on_book_view_log_screenshot`
 
 Running using Docker
 --------------------
@@ -46,4 +69,4 @@ and running on Heroku in minutes.
 Running using local files
 -------------------------
 
-See :ref:`backend-development-environment`
+See :ref:`backend_development_environment`

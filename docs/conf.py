@@ -19,7 +19,7 @@ import django
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, parent_dir)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sites.test.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sites.dev.settings'
 django.setup()
 
 # -- Project information -----------------------------------------------------
