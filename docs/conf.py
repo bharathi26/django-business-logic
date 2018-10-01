@@ -50,6 +50,7 @@ version = '{}.{}'.format(version_parts[0], version_parts[1])
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
+    'sphinx.ext.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -141,7 +142,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'django-business-logic.tex', 'django-business-logic Documentation',
-     'Dmitry Kuksinsky', 'manual'),
+     author, 'manual'),
 ]
 
 

@@ -2,10 +2,10 @@ Demo application
 ================
 
 Description
--------
+-----------
 
 Running using Docker
--------------------
+--------------------
 
 You can run demo app locally using docker:
 

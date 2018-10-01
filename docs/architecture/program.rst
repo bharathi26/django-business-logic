@@ -7,7 +7,21 @@ ProgramInterface
 ----------------
 
 .. autoclass:: business_logic.models.ProgramInterface
-    :members:
+    :members: arguments
+
+.. ProgramArgument:
+
+ProgramArgument
+~~~~~~~~~~~~~~~~
+
+.. autoclass:: business_logic.models.ProgramArgument
+
+.. ProgramArgumentField:
+
+ProgramArgumentField
+~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: business_logic.models.ProgramArgumentField
 
 
 .. Program:
@@ -24,6 +38,6 @@ ProgramVersion
 --------------
 
 .. autoclass:: business_logic.models.ProgramVersion
-    :members:
+    :members: execute, copy
 
 .. image:: ../static/uml/Program.svg

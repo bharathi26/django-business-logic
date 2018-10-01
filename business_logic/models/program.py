@@ -20,6 +20,12 @@ from ..fields import DeepAttributeField
 
 @python_2_unicode_compatible
 class ExecutionEnvironment(models.Model):
+    """
+    Environment of execution.
+    Can be linked to any of :class:`business_logic.models.ProgramInterface` ->
+    :class:`business_logic.models.Program` -> :class:`business_logic.models.ProgramVersion` chain.
+
+    """
     title = models.CharField(_('Title'), max_length=255, unique=True)
     description = models.TextField(_('Description'), null=True, blank=True)
     libraries = models.ManyToManyField('FunctionLibrary', related_name='environments', blank=True)
@@ -96,6 +102,14 @@ class ProgramArgument(models.Model):
 
 @python_2_unicode_compatible
 class ProgramArgumentField(models.Model):
+    """
+    Attributes:
+        program_argument(:class:`business_logic.models.ProgramArgument`): argument
+            of :class:`business_logic.models.ProgramInterface`
+        name(str): name of the field, can include dots for nested fields
+        title: human-readable name
+        variable_definition(:class:`business_logic.models.VariableDefinition`): definition for variable
+    """
     program_argument = models.ForeignKey(ProgramArgument, related_name='fields', on_delete=models.CASCADE)
     name = DeepAttributeField(_('Name'), max_length=255)
     title = models.CharField(_('Title'), max_length=255, null=True, blank=True)
@@ -194,8 +208,11 @@ class ProgramVersion(models.Model):
         """
         Creates a copy of self with given title.
         Suitable for "save as" actions.
-        :param new_title: new title
-        :return: new ProgramVersion instance
+
+        Args:
+            new_title: `str` new title
+        Returns:
+            new :class:`business_logic.models.ProgramVersion` instance
         """
         entry_point = self.entry_point.clone()
         new_version = ProgramVersion.objects.create(title=new_title, program=self.program, entry_point=entry_point)
@@ -205,10 +222,11 @@ class ProgramVersion(models.Model):
     def execute(self, context=None, **kwargs):
         """
         Main function for program execution
-
-        :param context: Context instance
-        :param kwargs:
-        :return: Context instance
+        Args:
+            context(:class:`business_logic.models.Context`, optional):
+            kwargs:
+        Returns:
+            (:class:`business_logic.models.Context`) instance
         """
         context = context if context is not None else Context()
         execution = context.execution = Execution.objects.create(program_version=self) if context.config.debug else None
