@@ -52,16 +52,17 @@ admin page to its ``execute()`` method. E.g.:
            program_version = program.versions.order_by("id").last()
            program_version.execute(order=order)
 
-The ``ProgramVersion.execute()`` method can accept instance of
-``business_logic.Context`` object. If this parameter omitted ``execute()``
-method creates new instance of ``Context`` with default parameters.
+The :func:`business_logic.models.ProgramVersion.execute` method can accept instance of
+:class:`business_logic.models.Context` object. If this parameter omitted ``execute()``
+method creates new instance of :class:`business_logic.models.Context` with specified by :class:`business_logic.models.ExecutionEnvironment` parameters or with default parameters.
 
 It can be initialized by the following parameters:
 
 * ``log`` (boolean, default - ``False``) - create execution log
-* ``debug`` (boolean, default - ``False``) - create special ``Execution`` object contained:
+* ``debug`` (boolean, default - ``False``) - create special :class:`business_logic.models.Execution` object contained:
+
     * all variables passed to ``execute()`` method
-    * ``ProgramVersion`` object
+    * :class:`business_logic.models.ProgramVersion` object
     * start and end execution times
     * root of log objects if its created
 

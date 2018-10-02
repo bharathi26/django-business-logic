@@ -21,7 +21,16 @@ from ..exceptions import StopInterpretationException, InterpretationException
 @python_2_unicode_compatible
 class Node(NS_Node):
     """
+    Derived from `treebeard.NS_Node <https://django-treebeard.readthedocs.io/en/latest/ns_tree.html#treebeard.ns_tree.NS_Node>`_.
+    Holds structure of syntax tree. All objects are linked using the
+    `django contenttypes framework <https://docs.djangoproject.com/en/2.1/ref/contrib/contenttypes/>`_.
+    Interprets code using the :func:`business_logic.models.Node.interpret` method.
+    Can acts as parent of code block if not contains content_object.
+    Can contains comment.
 
+    See Also:
+        * :class:`business_logic.models.NodeCache`
+        * :class:`business_logic.models.NodeCacheHolder`
     """
     content_type = models.ForeignKey(ContentType, null=True, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(null=True)
@@ -51,7 +60,7 @@ class Node(NS_Node):
         """
         Adds a root node to the tree. Saves content_objects if needed.
         Args:
-            **kwargs (object):
+            **kwargs: kwargs for :class:`business_logic.models.Node` constructor
 
         Returns:
             :class:`business_logic.models.Node`: created root node
@@ -64,7 +73,7 @@ class Node(NS_Node):
         Adds a child to the node. Saves content_objects if needed.
 
         Args:
-            **kwargs:
+            **kwargs: kwargs for :class:`business_logic.models.Node` constructor
 
         Returns:
             :class:`business_logic.models.Node`: created node
@@ -127,10 +136,19 @@ class Node(NS_Node):
         return Node.objects.get(id=visitor.clone.id)
 
     def interpret(self, ctx):
+        """
+        Interprets the held code.
 
+        Args:
+            ctx(:class:`business_logic.models.Context`): execution context
+
+        Returns:
+            interpreted value
+
+        """
         is_recursive_call = sys._getframe(0).f_code == sys._getframe(1).f_code
         is_block = self.is_block()
-        is_content_object_interpret_children_himself = self.is_content_object_interpret_children_himself()
+        is_content_object_interpret_children_itself = self.is_content_object_interpret_children_itself()
         exception_handling_policy = ctx.config.exception_handling_policy
         children = ctx.get_children(self)
         exception = None
@@ -152,7 +170,7 @@ class Node(NS_Node):
             exception = InterpretationException(exception)
             return exception
 
-        if is_block or not is_content_object_interpret_children_himself:
+        if is_block or not is_content_object_interpret_children_itself:
             for child in children:
                 try:
                     children_interpreted.append(child.interpret(ctx))
@@ -185,7 +203,7 @@ class Node(NS_Node):
     def is_statement(self):
         return self.object_id is not None
 
-    def is_content_object_interpret_children_himself(self):
+    def is_content_object_interpret_children_itself(self):
         return self.object_id is not None and getattr(self.content_object, 'interpret_children', False)
 
     def pprint(self):
@@ -212,7 +230,7 @@ class NodeCache:
     Creates cache with preloaded content objects for entire tree
     on first call of get_children().
 
-    Uses 1 + n SQL queries, where n is count of used content types.
+    Uses `1 + n` SQL queries, where n is count of used content types.
 
     """
     def __init__(self):
