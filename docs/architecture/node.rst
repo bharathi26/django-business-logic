@@ -4,13 +4,13 @@ Node
 ====
 
 .. autoclass:: business_logic.models.Node
-    :members:
+    :members: clone, pprint
 
 .. autoclass:: business_logic.models.NodeCache
-    :members:
+    :members: get_children
 
 .. autoclass:: business_logic.models.NodeCacheHolder
-    :members:
+    :members: get_children
 
 .. autoclass:: business_logic.models.NodeVisitor
-    :members:
+    :members: visit, preorder, postorder

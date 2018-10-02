@@ -20,6 +20,14 @@ from ..exceptions import StopInterpretationException, InterpretationException
 
 @python_2_unicode_compatible
 class Node(NS_Node):
+    """
+    Attributes:
+        program_argument(:class:`business_logic.models.ProgramArgument`): argument
+            of :class:`business_logic.models.ProgramInterface`
+        name(str): name of the field, can include dots for nested fields
+        title: human-readable name
+        variable_definition(:class:`business_logic.models.VariableDefinition`): definition for variable
+    """
     content_type = models.ForeignKey(ContentType, null=True, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -182,11 +190,25 @@ class Node(NS_Node):
 
 
 class NodeCache:
+    """
+    Creates cache with preloaded content objects for entire tree
+    on first call of get_children().
 
+    Uses 1 + n SQL queries, where n is count of used content types.
+
+    """
     def __init__(self):
         self._initialized = False
 
     def get_children(self, node):
+        """
+        Returns cached child nodes
+        Args:
+            node(:class:`business_logic.models.Node`): parent node
+
+        Returns:
+            list of :class:`business_logic.models.Node`
+        """
         self.initialize(node)
         return self._child_by_parent_id[node.id]
 
@@ -229,8 +251,18 @@ class NodeCache:
 
 
 class NodeCacheHolder(object):
-
+    """
+    Implements get_children() function using :class:`business_logic.models.NodeCache`
+    """
     def get_children(self, node):
+        """
+        Returns cached child nodes
+        Args:
+            node(:class:`business_logic.models.Node`): parent node
+
+        Returns:
+            list of :class:`business_logic.models.Node`
+        """
         if not hasattr(self, '_node_cache'):
             self._node_cache = NodeCache()
         return self._node_cache.get_children(node)
