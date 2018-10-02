@@ -21,12 +21,7 @@ from ..exceptions import StopInterpretationException, InterpretationException
 @python_2_unicode_compatible
 class Node(NS_Node):
     """
-    Attributes:
-        program_argument(:class:`business_logic.models.ProgramArgument`): argument
-            of :class:`business_logic.models.ProgramInterface`
-        name(str): name of the field, can include dots for nested fields
-        title: human-readable name
-        variable_definition(:class:`business_logic.models.VariableDefinition`): definition for variable
+
     """
     content_type = models.ForeignKey(ContentType, null=True, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(null=True)
@@ -43,6 +38,9 @@ class Node(NS_Node):
 
     @staticmethod
     def ensure_content_object_saved(**kwargs):
+        """
+        Saves content_object if needed.
+        """
         if 'content_object' in kwargs:
             content_object = kwargs['content_object']
             if not content_object.id:
@@ -50,10 +48,34 @@ class Node(NS_Node):
 
     @classmethod
     def add_root(cls, **kwargs):
+        """
+        Adds a root node to the tree. Saves content_objects if needed.
+        Args:
+            **kwargs (object):
+
+        Returns:
+            :class:`business_logic.models.Node`: created root node
+        """
         cls.ensure_content_object_saved(**kwargs)
         return super(Node, cls).add_root(**kwargs)
 
+    def add_child(self, **kwargs):
+        """
+        Adds a child to the node. Saves content_objects if needed.
+
+        Args:
+            **kwargs:
+
+        Returns:
+            :class:`business_logic.models.Node`: created node
+        """
+        self.ensure_content_object_saved(**kwargs)
+        return super(Node, self).add_child(**kwargs)
+
     def delete(self):
+        """
+        Removes a node and all it’s descendants, and content_objects if needed.
+        """
         if (self.object_id and self.content_object and
                 self.content_type.app_label == ContentType.objects.get_for_model(self.__class__).app_label):
             self.content_object.delete()
@@ -62,10 +84,6 @@ class Node(NS_Node):
             child.delete()
 
         return super(Node, self).delete()
-
-    def add_child(self, **kwargs):
-        self.ensure_content_object_saved(**kwargs)
-        return super(Node, self).add_child(**kwargs)
 
     def clone(self):
         """
@@ -203,11 +221,12 @@ class NodeCache:
     def get_children(self, node):
         """
         Returns cached child nodes
+
         Args:
             node(:class:`business_logic.models.Node`): parent node
 
         Returns:
-            list of :class:`business_logic.models.Node`
+            :obj:`list` of :class:`business_logic.models.Node`
         """
         self.initialize(node)
         return self._child_by_parent_id[node.id]
@@ -257,11 +276,12 @@ class NodeCacheHolder(object):
     def get_children(self, node):
         """
         Returns cached child nodes
+
         Args:
             node(:class:`business_logic.models.Node`): parent node
 
         Returns:
-            list of :class:`business_logic.models.Node`
+            :obj:`list` of :class:`business_logic.models.Node`
         """
         if not hasattr(self, '_node_cache'):
             self._node_cache = NodeCache()

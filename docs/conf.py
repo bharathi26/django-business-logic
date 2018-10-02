@@ -185,6 +185,7 @@ epub_title = project
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
+autodoc_member_order = 'bysource'
 autodoc_default_options = {
     'member-order': 'bysource',
     # 'undoc-members': None,
