@@ -22,5 +22,7 @@ sections `Administrative setup <#administrative-setup>`__ and
    environment.rst
    context.rst
    functions.rst
-   log.rst
+   logging.rst
+   signals.rst
+   exceptions.rst
 
