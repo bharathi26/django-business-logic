@@ -1,6 +1,8 @@
 Configuration
 =============
 
+.. _administrative_setup:
+
 Administrative setup
 --------------------
 
@@ -28,6 +30,8 @@ interface(\ http://localhost:8000/admin/business_logic/referencedescriptor/).
 Next create one or more Program objects which must implements described
 ProgramInterface(e.g. named "On Order create" with "on\_order\_create"
 ``code`` field for programmatic access)
+
+.. _invocation_injecting:
 
 Invocation injecting
 --------------------

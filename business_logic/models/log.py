@@ -21,12 +21,12 @@ except AttributeError:
 
 class Logger(object):
     """
-    Processed log creation during calling the :func:`business_logis.models.ProgramVersion.execute` method.
+    Processed log creation during calling the :func:`business_logic.models.ProgramVersion.execute` method.
     Will work only if ``Context.config.log`` flag is set to ``True``.
 
     See Also:
-        * :class:`business_logis.config.ContextConfig`
-        * :class:`business_logis.models.Context`
+        * :class:`business_logic.config.ContextConfig`
+        * :class:`business_logic.models.Context`
         * :ref:`Signals`
     """
     def __init__(self):
@@ -83,8 +83,8 @@ class LogEntry(AL_Node):
         exception(:class:`business_logic.models.ExceptionLog`): exception if it raised during interpretation.
 
     See Also:
-        * :class:`business_logis.config.ContextConfig`
-        * :class:`business_logis.models.Context`
+        * :class:`business_logic.config.ContextConfig`
+        * :class:`business_logic.models.Context`
     """
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
     sib_order = models.PositiveIntegerField()
@@ -115,19 +115,19 @@ class ExceptionLog(models.Model):
 
 class Execution(models.Model):
     """
-    Stores information about calling the :func:`business_logis.models.ProgramVersion.execute` method.
+    Stores information about calling the :func:`business_logic.models.ProgramVersion.execute` method.
     Will be created only if ``Context.config.debug`` flag is set to ``True``.
 
     Attributes:
-        program_version(:class:`business_logis.models.ProgramVersion`): executed ProgramVersion
-        arguments(:obj:`list` of :class:`business_logis.models.ExecutionArgument`): arguments of execution
+        program_version(:class:`business_logic.models.ProgramVersion`): executed ProgramVersion
+        arguments(:obj:`list` of :class:`business_logic.models.ExecutionArgument`): arguments of execution
         start_time(:obj:`datetime`): start execution time
         finish_time(:obj:`datetime`): finish execution time
-        log(:class:`business_logis.models.LogEntry`): root node of LogEntries
+        log(:class:`business_logic.models.LogEntry`): root node of LogEntries
 
     See Also:
-        * :class:`business_logis.config.ContextConfig`
-        * :class:`business_logis.models.Context`
+        * :class:`business_logic.config.ContextConfig`
+        * :class:`business_logic.models.Context`
     """
     log = models.OneToOneField('business_logic.LogEntry', null=True, on_delete=models.SET_NULL)
     program_version = models.ForeignKey('business_logic.ProgramVersion', on_delete=models.CASCADE)
@@ -139,11 +139,11 @@ class Execution(models.Model):
 
 class ExecutionArgument(models.Model):
     """
-    Stores information about argument passed to :func:`business_logis.models.ProgramVersion.execute`.
+    Stores information about argument passed to :func:`business_logic.models.ProgramVersion.execute`.
 
     Attributes:
-        execution(:class:`business_logis.models.Execution`): parent Execution object
-        program_argument(:class:`business_logis.models.ProgramArgument`): parent ProgramArgument object
+        execution(:class:`business_logic.models.Execution`): parent Execution object
+        program_argument(:class:`business_logic.models.ProgramArgument`): parent ProgramArgument object
         content_object(:class:`django.db.models.Model`): passed argument
     """
     execution = models.ForeignKey('business_logic.Execution', related_name='arguments', on_delete=models.CASCADE)

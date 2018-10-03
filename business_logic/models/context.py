@@ -10,6 +10,10 @@ from .variable import Variable, VariableDefinition
 
 
 class Context(NodeCacheHolder):
+    """
+    Attributes:
+        config(:class:`business_logic.config.ContextConfig`):
+    """
 
     def __init__(self, **kwargs):
         self.config = ContextConfig(**kwargs)

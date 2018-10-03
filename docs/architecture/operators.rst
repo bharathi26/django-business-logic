@@ -3,12 +3,10 @@
 Operators
 =========
 
-.. autoclass:: business_logic.models.Assignment
-    :members: interpret
-
 .. autoclass:: business_logic.models.BinaryOperator
     :members:
 
 .. autoclass:: business_logic.models.UnaryOperator
-.. autoclass:: business_logic.models.IfStatement
 
+.. autoclass:: business_logic.models.Assignment
+    :members: interpret
